@@ -379,7 +379,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 
 var bind = __webpack_require__(37);
-var isBuffer = __webpack_require__(89);
+var isBuffer = __webpack_require__(90);
 
 /*global toString:true*/
 
@@ -1864,7 +1864,7 @@ var createTransitionManager = function createTransitionManager() {
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(4);
-var normalizeHeaderName = __webpack_require__(91);
+var normalizeHeaderName = __webpack_require__(92);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -2811,12 +2811,12 @@ module.exports = function bind(fn, thisArg) {
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(4);
-var settle = __webpack_require__(92);
-var buildURL = __webpack_require__(94);
-var parseHeaders = __webpack_require__(95);
-var isURLSameOrigin = __webpack_require__(96);
+var settle = __webpack_require__(93);
+var buildURL = __webpack_require__(95);
+var parseHeaders = __webpack_require__(96);
+var isURLSameOrigin = __webpack_require__(97);
 var createError = __webpack_require__(39);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(97);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(98);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -2913,7 +2913,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(98);
+      var cookies = __webpack_require__(99);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -2998,7 +2998,7 @@ module.exports = function xhrAdapter(config) {
 "use strict";
 
 
-var enhanceError = __webpack_require__(93);
+var enhanceError = __webpack_require__(94);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -24050,15 +24050,19 @@ var _Teams = __webpack_require__(84);
 
 var _Teams2 = _interopRequireDefault(_Teams);
 
-var _Nav = __webpack_require__(85);
+var _Team = __webpack_require__(85);
+
+var _Team2 = _interopRequireDefault(_Team);
+
+var _Nav = __webpack_require__(86);
 
 var _Nav2 = _interopRequireDefault(_Nav);
 
-var _Home = __webpack_require__(86);
+var _Home = __webpack_require__(87);
 
 var _Home2 = _interopRequireDefault(_Home);
 
-var _axios = __webpack_require__(87);
+var _axios = __webpack_require__(88);
 
 var _axios2 = _interopRequireDefault(_axios);
 
@@ -24081,8 +24085,12 @@ var Main = function (_React$Component) {
 
     _this.state = {
       players: [],
-      teams: []
+      teams: [],
+      selectedTeam: {},
+      selectedTeamPlayers: []
     };
+    _this.selectTeam = _this.selectTeam.bind(_this);
+    _this.teamPlayers = _this.teamPlayers.bind(_this);
     return _this;
   }
 
@@ -24103,11 +24111,31 @@ var Main = function (_React$Component) {
       });
     }
   }, {
+    key: 'selectTeam',
+    value: function selectTeam(teamId) {
+      var selectedTeam = this.state.teams.find(function (team) {
+        return team.id === teamId;
+      });
+      this.teamPlayers(teamId);
+      this.setState({ selectedTeam: selectedTeam });
+    }
+  }, {
+    key: 'teamPlayers',
+    value: function teamPlayers(teamId) {
+      var players = this.state.players.filter(function (player) {
+        return player.team.id === teamId;
+      });
+      this.setState({ selectedTeamPlayers: players });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _state = this.state,
           players = _state.players,
-          teams = _state.teams;
+          teams = _state.teams,
+          selectedTeam = _state.selectedTeam,
+          selectedTeamPlayers = _state.selectedTeamPlayers;
+      var selectTeam = this.selectTeam;
 
       return _react2.default.createElement(
         _reactRouterDom.HashRouter,
@@ -24121,7 +24149,10 @@ var Main = function (_React$Component) {
               return _react2.default.createElement(_Players2.default, { players: players });
             } }),
           _react2.default.createElement(_reactRouterDom.Route, { path: '/teams', exact: true, render: function render() {
-              return _react2.default.createElement(_Teams2.default, { teams: teams });
+              return _react2.default.createElement(_Teams2.default, { teams: teams, selectTeam: selectTeam });
+            } }),
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/teams/:id', exact: true, render: function render() {
+              return _react2.default.createElement(_Team2.default, { selectedTeam: selectedTeam, players: selectedTeamPlayers });
             } })
         )
       );
@@ -24194,10 +24225,14 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = __webpack_require__(16);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/* eslint-disable */
 var Teams = function Teams(_ref) {
-  var teams = _ref.teams;
+  var teams = _ref.teams,
+      selectTeam = _ref.selectTeam;
 
   return _react2.default.createElement(
     'div',
@@ -24214,18 +24249,74 @@ var Teams = function Teams(_ref) {
         return _react2.default.createElement(
           'li',
           { key: team.id },
-          team.name,
+          _react2.default.createElement(
+            _reactRouterDom.Link,
+            { onClick: function onClick() {
+                return selectTeam(team.id);
+              }, to: '/teams/' + team.id },
+            team.name
+          ),
           ': ',
           team.players.length === 1 ? team.players.length + ' player' : team.players.length + ' players'
         );
       })
     )
   );
-}; /* eslint-disable */
+};
+
 exports.default = Teams;
 
 /***/ }),
 /* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Team = function Team(_ref) {
+  var selectedTeam = _ref.selectedTeam,
+      players = _ref.players;
+
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'h1',
+      null,
+      selectedTeam.name
+    ),
+    _react2.default.createElement(
+      'h3',
+      null,
+      'Players'
+    ),
+    _react2.default.createElement(
+      'ul',
+      null,
+      players.map(function (player) {
+        return _react2.default.createElement(
+          'li',
+          { key: player.id },
+          player.name
+        );
+      })
+    )
+  );
+}; /* eslint-disable */
+exports.default = Team;
+
+/***/ }),
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24296,7 +24387,7 @@ var Nav = function Nav(_ref) {
 exports.default = Nav;
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24323,13 +24414,13 @@ var Home = function Home() {
 exports.default = Home;
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(88);
+module.exports = __webpack_require__(89);
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24337,7 +24428,7 @@ module.exports = __webpack_require__(88);
 
 var utils = __webpack_require__(4);
 var bind = __webpack_require__(37);
-var Axios = __webpack_require__(90);
+var Axios = __webpack_require__(91);
 var defaults = __webpack_require__(23);
 
 /**
@@ -24372,14 +24463,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(41);
-axios.CancelToken = __webpack_require__(104);
+axios.CancelToken = __webpack_require__(105);
 axios.isCancel = __webpack_require__(40);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(105);
+axios.spread = __webpack_require__(106);
 
 module.exports = axios;
 
@@ -24388,7 +24479,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports) {
 
 /*!
@@ -24415,7 +24506,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24423,8 +24514,8 @@ function isSlowBuffer (obj) {
 
 var defaults = __webpack_require__(23);
 var utils = __webpack_require__(4);
-var InterceptorManager = __webpack_require__(99);
-var dispatchRequest = __webpack_require__(100);
+var InterceptorManager = __webpack_require__(100);
+var dispatchRequest = __webpack_require__(101);
 
 /**
  * Create a new instance of Axios
@@ -24501,7 +24592,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24520,7 +24611,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24553,7 +24644,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24581,7 +24672,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24654,7 +24745,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24714,7 +24805,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24789,7 +24880,7 @@ module.exports = (
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24832,7 +24923,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24892,7 +24983,7 @@ module.exports = (
 
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24951,18 +25042,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(4);
-var transformData = __webpack_require__(101);
+var transformData = __webpack_require__(102);
 var isCancel = __webpack_require__(40);
 var defaults = __webpack_require__(23);
-var isAbsoluteURL = __webpack_require__(102);
-var combineURLs = __webpack_require__(103);
+var isAbsoluteURL = __webpack_require__(103);
+var combineURLs = __webpack_require__(104);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -25044,7 +25135,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25071,7 +25162,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25092,7 +25183,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25113,7 +25204,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25177,7 +25268,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
