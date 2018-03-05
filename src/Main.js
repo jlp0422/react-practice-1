@@ -3,8 +3,8 @@ import React from 'react';
 import { Route, HashRouter as Router, Link } from 'react-router-dom';
 import Players from './Players';
 import Teams from './Teams';
-import Nav from './Nav'
-import axios from 'axios'
+import Nav from './Nav';
+import axios from 'axios';
 
 export default class Main extends React.Component {
   constructor() {
@@ -13,7 +13,7 @@ export default class Main extends React.Component {
       players: [],
       teams: []
     }
-  }
+  };
 
   componentWillMount() {
     axios.get('/api/players')
@@ -22,18 +22,18 @@ export default class Main extends React.Component {
     axios.get('/api/teams')
       .then(res => res.data)
       .then(teams => this.setState({ teams }))
-  }
+  };
 
   render() {
     const { players, teams } = this.state
     return (
-      // <Router>
+      <Router>
         <div>
-          <Nav />
-          <Players players={ players } />
-          <Teams teams={ teams } />
+          <Route component={ Nav }/>
+          <Route path='/players' exact render={() => (<Players players={players} />)} />
+          <Route path='/teams' exact render={() => (<Teams teams={teams} />)} />
         </div>
-      // </Router>
+      </Router>
     )
   }
 }
