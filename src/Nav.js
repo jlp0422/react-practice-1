@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const Nav = ({ location }) => {
   const path = location.pathname
   return (
-    <ul className="nav nav-pills">
+    <ul style={{marginTop: 15,marginBottom: 15}} className="nav nav-pills">
       <li className="nav-item">
         {
          path === '/' ? (

@@ -4,6 +4,7 @@ import { Route, HashRouter as Router, Link } from 'react-router-dom';
 import Players from './Players';
 import Teams from './Teams';
 import Nav from './Nav';
+import Home from './Home';
 import axios from 'axios';
 
 export default class Main extends React.Component {
@@ -30,6 +31,7 @@ export default class Main extends React.Component {
       <Router>
         <div>
           <Route component={ Nav }/>
+          <Route path='/' exact component={ Home } />
           <Route path='/players' exact render={() => (<Players players={players} />)} />
           <Route path='/teams' exact render={() => (<Teams teams={teams} />)} />
         </div>
