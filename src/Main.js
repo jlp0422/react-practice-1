@@ -2,6 +2,7 @@
 import React from 'react';
 import { Route, HashRouter as Router, Link } from 'react-router-dom';
 import Players from './Players';
+import Player from './Player'
 import Teams from './Teams';
 import Team from './Team';
 import Nav from './Nav';
@@ -15,10 +16,11 @@ export default class Main extends React.Component {
       players: [],
       teams: [],
       selectedTeam: {},
-      selectedTeamPlayers: []
+      selectedTeamPlayers: [],
+      selectedPlayer: {},
     }
-    this.selectTeam = this.selectTeam.bind(this)
-    this.teamPlayers = this.teamPlayers.bind(this)
+    this.selectTeamAndPlayers = this.selectTeamAndPlayers.bind(this)
+    this.selectPlayerAndTeam = this.selectPlayerAndTeam.bind(this)
   };
 
   componentWillMount() {
@@ -30,28 +32,36 @@ export default class Main extends React.Component {
       .then(teams => this.setState({ teams }))
   };
 
-  selectTeam(teamId) {
+  selectTeamAndPlayers(teamId) {
     const selectedTeam = this.state.teams.find(team => team.id === teamId)
-    this.teamPlayers(teamId)
-    this.setState({ selectedTeam })
+    const selectedTeamPlayers = this.state.players.filter(player => player.team.id === teamId)
+    this.setState({ selectedTeam, selectedTeamPlayers })
   }
 
-  teamPlayers(teamId) {
-    const players = this.state.players.filter( player => player.team.id === teamId)
-    this.setState({ selectedTeamPlayers: players })
+  selectPlayerAndTeam(playerId, teamId) {
+    const selectedPlayer = this.state.players.find(p => p.id === playerId)
+    const selectedTeam = this.state.teams.find(team => team.id === teamId)
+    this.setState({ selectedPlayer, selectedTeam })
   }
 
   render() {
-    const { players, teams, selectedTeam, selectedTeamPlayers } = this.state
-    const { selectTeam } = this
+    const { players, teams, selectedTeam, selectedTeamPlayers, selectedPlayer } = this.state
+    const { selectTeamAndPlayers, selectPlayerAndTeam } = this
     return (
       <Router>
         <div>
           <Route component={ Nav }/>
+
           <Route path='/' exact component={ Home } />
-          <Route path='/players' exact render={() => (<Players players={players} />)} />
-          <Route path='/teams' exact render={() => (<Teams teams={teams} selectTeam={selectTeam}/>)} />
-          <Route path='/teams/:id' exact render={() => (<Team selectedTeam={selectedTeam} players={ selectedTeamPlayers }/>)} />
+
+          <Route path='/players' exact render={() => (<Players players={players} selectPlayerAndTeam={ selectPlayerAndTeam }/>)} />
+
+          <Route path='/players/:id' exact render={()=> (<Player player={ selectedPlayer } team={ selectedTeam } />)} />
+
+          <Route path='/teams' exact render={() => (<Teams teams={teams} selectTeamAndPlayers={ selectTeamAndPlayers }/>)} />
+
+          <Route path='/teams/:id' exact render={() => (<Team selectedTeam={selectedTeam} players={ selectedTeamPlayers } selectTeamAndPlayers={ selectTeamAndPlayers }/> )} />
+
         </div>
       </Router>
     )

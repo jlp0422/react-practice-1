@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Nav = ({ location }) => {
+  // console.log(location)
   const path = location.pathname
   return (
     <ul style={{marginTop: 15,marginBottom: 15}} className="nav nav-pills">
@@ -17,7 +18,7 @@ const Nav = ({ location }) => {
       </li>
       <li className="nav-item">
         {
-         path === '/players' ? (
+         path.match(/players/) ? (
            <span className="nav-link active font-weight-bold">Players</span>
          ) : (
            <Link className="nav-link font-weight-bold" to='/players'>Players</Link>
@@ -26,7 +27,7 @@ const Nav = ({ location }) => {
       </li>
       <li className="nav-item">
         {
-         path === '/teams' ? (
+         path.match(/teams/) ? (
            <span className="nav-link active font-weight-bold">Teams</span>
          ) : (
            <Link className="nav-link font-weight-bold" to='/teams'>Teams</Link>
