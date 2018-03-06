@@ -14,7 +14,8 @@ app.get('/', (req, res, next) => {
 
 app.get('/api/players', (req, res, next) => {
   Player.findAll({
-    include: [ Team ]
+    include: [ Team ],
+    order: [ 'name']
   })
   .then( players => res.send(players))
   .catch(next)

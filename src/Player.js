@@ -14,7 +14,7 @@ const Player = ({ player, team }) => {
               <li key={teammate.id}>{ teammate.name }</li>
             ))
           ) : (
-            <li>No teammates</li>
+            <li>None</li>
           )
 
         }
