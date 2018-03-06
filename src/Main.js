@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React from 'react';
 import { Route, HashRouter as Router, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import Players from './Players';
 import Player from './Player'
 import Teams from './Teams';
@@ -56,7 +57,16 @@ export default class Main extends React.Component {
 
           <Route path='/players' exact render={() => (<Players players={players} selectPlayerAndTeam={ selectPlayerAndTeam }/>)} />
 
-          <Route path='/players/:id' exact render={()=> (<Player player={ selectedPlayer } team={ selectedTeam } />)} />
+        {/*  <Route path='/players/:id' exact render={()=> {
+            return (
+              <div>
+                <Helmet><title>Testing!!!</title></Helmet>
+                <Player player={ selectedPlayer } team={ selectedTeam } />
+              </div>
+            )}} />
+        */}
+
+          <Route path='/players/:id' exact render={() => ( <Player player={selectedPlayer} team={selectedTeam} /> )} />
 
           <Route path='/teams' exact render={() => (<Teams teams={teams} selectTeamAndPlayers={ selectTeamAndPlayers }/>)} />
 

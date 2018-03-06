@@ -3,7 +3,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Nav = ({ location }) => {
-  // console.log(location)
   const path = location.pathname
   return (
     <ul style={{marginTop: 15,marginBottom: 15}} className="nav nav-pills">

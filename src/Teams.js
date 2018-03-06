@@ -1,10 +1,14 @@
 /* eslint-disable */
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const Teams = ({ teams, selectTeamAndPlayers }) => {
   return (
     <div>
+    <Helmet>
+      <title>Teams</title>
+    </Helmet>
       <h1>Teams</h1>
       <ul className="list-group">
       {
