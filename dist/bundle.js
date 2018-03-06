@@ -24213,11 +24213,11 @@ var Players = function Players(_ref) {
     ),
     _react2.default.createElement(
       'ul',
-      null,
+      { className: 'list-group' },
       players && players.map(function (player) {
         return _react2.default.createElement(
           'li',
-          { key: player.id },
+          { className: 'list-group-item', key: player.id },
           _react2.default.createElement(
             _reactRouterDom.Link,
             { onClick: function onClick() {
@@ -24334,11 +24334,11 @@ var Teams = function Teams(_ref) {
     ),
     _react2.default.createElement(
       'ul',
-      null,
+      { className: 'list-group' },
       teams && teams.map(function (team) {
         return _react2.default.createElement(
           'li',
-          { key: team.id },
+          { className: 'list-group-item', key: team.id },
           _react2.default.createElement(
             _reactRouterDom.Link,
             { onClick: function onClick() {
