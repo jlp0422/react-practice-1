@@ -24535,8 +24535,9 @@ var Main = function (_React$Component) {
           _react2.default.createElement(_reactRouterDom.Route, { path: '/teams', exact: true, render: function render() {
               return _react2.default.createElement(_Teams2.default, { teams: teams, selectTeamAndPlayers: selectTeamAndPlayers });
             } }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: '/teams/:id', exact: true, render: function render() {
-              return _react2.default.createElement(_Team2.default, { selectedTeam: selectedTeam, players: selectedTeamPlayers, selectTeamAndPlayers: selectTeamAndPlayers });
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/teams/:id', exact: true, render: function render(_ref) {
+              var match = _ref.match;
+              return _react2.default.createElement(_Team2.default, { selectedTeam: selectedTeam, players: selectedTeamPlayers, id: match.params.id, selectTeamAndPlayers: selectTeamAndPlayers });
             } })
         )
       );
@@ -25563,9 +25564,46 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = __webpack_require__(10);
+
 var _reactHelmet = __webpack_require__(8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// export default class Player extends React.Component {
+//   constructor(props) {
+//     super(props)
+//     this.state = {
+
+//     }
+//   }
+//   render() {
+//     console.log(props)
+//     return (
+//       <div>
+//         <Helmet>
+//           <title>{player.name}</title>
+//         </Helmet>
+//         <h1>{player.name}</h1>
+//         <h3>Team: {team.name}</h3>
+//         <h3>Teammates</h3>
+//         <ul>
+//           {
+//             teammates.length ? (
+//               teammates.map(teammate => (
+//                 <li key={teammate.id}>{teammate.name}</li>
+//               ))
+//             ) : (
+//                 <li>None</li>
+//               )
+
+//           }
+//         </ul>
+//       </div>
+//     )
+//   }
+// }
+
 
 var Player = function Player(_ref) {
   var player = _ref.player,
@@ -25614,12 +25652,22 @@ var Player = function Player(_ref) {
       }) : _react2.default.createElement(
         'li',
         null,
-        'None'
+        'No teammates'
+      )
+    ),
+    _react2.default.createElement('br', null),
+    _react2.default.createElement('br', null),
+    _react2.default.createElement(
+      'p',
+      null,
+      _react2.default.createElement(
+        _reactRouterDom.Link,
+        { to: '/players' },
+        '\xAB Back to all players'
       )
     )
   );
-};
-
+}; /* eslint-disable */
 exports.default = Player;
 
 /***/ }),
@@ -25702,18 +25750,34 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = __webpack_require__(10);
+
 var _reactHelmet = __webpack_require__(8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/* eslint-disable */
-var Team = function Team(_ref) {
-  var selectedTeam = _ref.selectedTeam,
-      players = _ref.players,
-      selectTeamAndPlayers = _ref.selectTeamAndPlayers;
+// class Team extends React.Component {
+//   constructor(props) {
+//     super(props)
+//     const { selectTeamAndPlayers, id } = this.props
+//   }
 
-  // const teamId = location.hash.substring(location.hash.length - 1)
-  // console.log(selectedTeam)
+//   componentWillMount(){
+//     const { selectTeamAndPlayers, id } = this.props
+//     console.log(selectTeamAndPlayers)
+//     console.log(id)
+//   }
+//   render() {
+//     // console.log(this)
+//     return (<_Team selectedTeam={ selectTeamAndPlayers(id) } players={ this.props.players } />);
+//   }
+// }
+
+
+var Team = function Team(_ref) {
+  var players = _ref.players,
+      selectedTeam = _ref.selectedTeam;
+
   return _react2.default.createElement(
     'div',
     null,
@@ -25723,10 +25787,10 @@ var Team = function Team(_ref) {
       _react2.default.createElement(
         'title',
         null,
-        selectedTeam.name
+        'Title'
       )
     ),
-    _react2.default.createElement(
+    selectedTeam && _react2.default.createElement(
       'h1',
       null,
       selectedTeam.name
@@ -25746,10 +25810,20 @@ var Team = function Team(_ref) {
           player.name
         );
       })
+    ),
+    _react2.default.createElement('br', null),
+    _react2.default.createElement('br', null),
+    _react2.default.createElement(
+      'p',
+      null,
+      _react2.default.createElement(
+        _reactRouterDom.Link,
+        { to: '/teams' },
+        '\xAB Back to all teams'
+      )
     )
   );
-};
-
+}; /* eslint-disable */
 exports.default = Team;
 
 /***/ }),

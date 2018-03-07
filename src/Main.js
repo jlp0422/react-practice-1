@@ -57,20 +57,11 @@ export default class Main extends React.Component {
 
           <Route path='/players' exact render={() => (<Players players={players} selectPlayerAndTeam={ selectPlayerAndTeam }/>)} />
 
-        {/*  <Route path='/players/:id' exact render={()=> {
-            return (
-              <div>
-                <Helmet><title>Testing!!!</title></Helmet>
-                <Player player={ selectedPlayer } team={ selectedTeam } />
-              </div>
-            )}} />
-        */}
-
           <Route path='/players/:id' exact render={() => ( <Player player={selectedPlayer} team={selectedTeam} /> )} />
 
           <Route path='/teams' exact render={() => (<Teams teams={teams} selectTeamAndPlayers={ selectTeamAndPlayers }/>)} />
 
-          <Route path='/teams/:id' exact render={() => (<Team selectedTeam={selectedTeam} players={ selectedTeamPlayers } selectTeamAndPlayers={ selectTeamAndPlayers }/> )} />
+          <Route path='/teams/:id' exact render={({ match }) => (<Team selectedTeam={selectedTeam} players={selectedTeamPlayers} id={match.params.id} selectTeamAndPlayers={ selectTeamAndPlayers }/> )} />
 
         </div>
       </Router>
