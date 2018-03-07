@@ -23,7 +23,7 @@ app.get('/api/players', (req, res, next) => {
 
 app.get('/api/teams', (req, res, next) => {
   Team.findAll({
-    include: [ Player ]
+    include: [ Player ],
   })
     .then( teams => res.send(teams))
     .catch(next)

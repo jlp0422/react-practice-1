@@ -24,7 +24,7 @@ export default class Main extends React.Component {
     this.selectPlayerAndTeam = this.selectPlayerAndTeam.bind(this)
   };
 
-  componentWillMount() {
+  componentDidMount() {
     axios.get('/api/players')
       .then( res => res.data)
       .then( players => this.setState({ players }))
@@ -57,7 +57,7 @@ export default class Main extends React.Component {
 
           <Route path='/players' exact render={() => (<Players players={players} selectPlayerAndTeam={ selectPlayerAndTeam }/>)} />
 
-          <Route path='/players/:id' exact render={() => ( <Player player={selectedPlayer} team={selectedTeam} /> )} />
+          <Route path='/players/:id' exact render={({ match }) => ( <Player id={match.params.id} /> )} />
 
           <Route path='/teams' exact render={() => (<Teams teams={teams} selectTeamAndPlayers={ selectTeamAndPlayers }/>)} />
 

@@ -2,30 +2,36 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import axios from 'axios';
 
-// class Team extends React.Component {
-//   constructor(props) {
-//     super(props)
-//     const { selectTeamAndPlayers, id } = this.props
-//   }
+export default class Team extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      team: {},
+      players: []
+    }
+  }
 
-//   componentWillMount(){
-//     const { selectTeamAndPlayers, id } = this.props
-//     console.log(selectTeamAndPlayers)
-//     console.log(id)
-//   }
-//   render() {
-//     // console.log(this)
-//     return (<_Team selectedTeam={ selectTeamAndPlayers(id) } players={ this.props.players } />);
-//   }
-// }
+  componentWillMount(){
+    axios.get('/api/teams')
+      .then( res => res.data)
+      .then( teams => teams.find(team => team.id === this.props.id*1))
+      .then( team => this.setState({ team: team, players: team.players}))
+  }
+
+  render() {
+    const { players, team } = this.state
+    return (<_Team  players={ players } selectedTeam={ team } />);
+  }
+}
 
 
-const Team = ({ players, selectedTeam}) => {
+const _Team = ({ players, selectedTeam}) => {
   return (
     <div>
       <Helmet>
-        <title>Title</title>
+        <title>{ selectedTeam.name }</title>
       </Helmet>
       {
         selectedTeam &&
@@ -45,5 +51,3 @@ const Team = ({ players, selectedTeam}) => {
     </div>
   )
 }
-
-export default Team;

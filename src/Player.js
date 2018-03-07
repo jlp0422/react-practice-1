@@ -2,44 +2,41 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import axios from 'axios';
 
-// export default class Player extends React.Component {
-//   constructor(props) {
-//     super(props)
-//     this.state = {
+export default class Player extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      player: {},
+      team: {},
+      teammates: []
+    }
+  }
 
-//     }
-//   }
-//   render() {
-//     console.log(props)
-//     return (
-//       <div>
-//         <Helmet>
-//           <title>{player.name}</title>
-//         </Helmet>
-//         <h1>{player.name}</h1>
-//         <h3>Team: {team.name}</h3>
-//         <h3>Teammates</h3>
-//         <ul>
-//           {
-//             teammates.length ? (
-//               teammates.map(teammate => (
-//                 <li key={teammate.id}>{teammate.name}</li>
-//               ))
-//             ) : (
-//                 <li>None</li>
-//               )
+  componentWillMount() {
+    axios.get('/api/players')
+      .then( res => res.data)
+      .then( players => players.find(player => player.id === this.props.id*1))
+      .then( player => this.setState({ player: player, team: player.team}))
+  }
 
-//           }
-//         </ul>
-//       </div>
-//     )
-//   }
-// }
+  componentDidMount() {
+    axios.get('/api/teams')
+      .then(res => res.data)
+      .then(teams => teams.find(team => team.id === this.state.team.id))
+      .then(team => team.players.filter(player => player.id !== this.state.player.id))
+      .then(teammates => this.setState({ teammates }))
+  }
 
+  render() {
+    const { player, team, teammates } = this.state
+    return ( <_Player player={ player } team={ team } teammates = {teammates} /> )
+  }
+}
 
-const Player = ({ player, team }) => {
-  const teammates = team.name ? team.players.filter(p => p.id !== player.id) : []
+const _Player = ({ player, team, teammates }) => {
+  // const teammates = team.name ? team.players.filter(p => p.id !== player.id) : []
   return (
     <div>
       <Helmet>
@@ -64,5 +61,3 @@ const Player = ({ player, team }) => {
     </div>
   )
 }
-
-export default Player;
