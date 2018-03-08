@@ -26957,14 +26957,22 @@ var _CreateTeam = function _CreateTeam(_ref) {
       'form',
       { onSubmit: submitButton },
       _react2.default.createElement(
-        'label',
-        null,
-        'Team name'
+        'div',
+        { className: 'form-row' },
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group col-md-8' },
+          _react2.default.createElement(
+            'label',
+            { className: 'font-weight-bold' },
+            'Team name'
+          ),
+          _react2.default.createElement('input', { className: 'form-control', value: name, onChange: onNameChange })
+        )
       ),
-      _react2.default.createElement('input', { value: name, onChange: onNameChange }),
       _react2.default.createElement(
         'button',
-        { disabled: name.length === 0 },
+        { className: 'btn btn-success', disabled: name.length === 0 },
         'Create'
       )
     )
@@ -27083,30 +27091,47 @@ var _CreatePlayer = function _CreatePlayer(_ref) {
       'form',
       { onSubmit: submitButton },
       _react2.default.createElement(
-        'label',
-        null,
-        'Player name'
-      ),
-      _react2.default.createElement('input', { value: name, onChange: onNameChange }),
-      _react2.default.createElement(
-        'select',
-        { value: teamId, onChange: onTeamChange },
+        'div',
+        { className: 'form-row' },
         _react2.default.createElement(
-          'option',
-          { value: '' },
-          'Select team'
+          'div',
+          { className: 'form-group col-md-6' },
+          _react2.default.createElement(
+            'label',
+            { className: 'font-weight-bold' },
+            'Player name'
+          ),
+          _react2.default.createElement('input', { value: name, className: 'form-control', onChange: onNameChange })
         ),
-        teams.map(function (team) {
-          return _react2.default.createElement(
-            'option',
-            { key: team.id, value: team.id },
-            team.name
-          );
-        })
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group col-md-4' },
+          _react2.default.createElement(
+            'label',
+            { className: 'font-weight-bold' },
+            'Team'
+          ),
+          _react2.default.createElement(
+            'select',
+            { className: 'form-control', value: teamId, onChange: onTeamChange },
+            _react2.default.createElement(
+              'option',
+              { value: '' },
+              'Select team'
+            ),
+            teams.map(function (team) {
+              return _react2.default.createElement(
+                'option',
+                { key: team.id, value: team.id },
+                team.name
+              );
+            })
+          )
+        )
       ),
       _react2.default.createElement(
         'button',
-        { disabled: name.length === 0 },
+        { className: 'btn btn-success', disabled: name.length === 0 },
         'Create'
       )
     )

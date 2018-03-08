@@ -46,17 +46,25 @@ const _CreatePlayer = ({ submitButton, onTeamChange, onNameChange, name, teams, 
     <div>
       <h1>Add a new player</h1>
       <form onSubmit={submitButton}>
-        <label>Player name</label>
-        <input value={name} onChange={onNameChange} />
-        <select value={ teamId } onChange={onTeamChange}>
-          <option value=''>Select team</option>
-          {
-            teams.map(team => (
-              <option key={team.id} value={team.id}>{team.name}</option>
-            ))
-          }
-        </select>
-        <button disabled={name.length === 0}>Create</button>
+        <div className="form-row">
+          <div className="form-group col-md-6">
+            <label className="font-weight-bold">Player name</label>
+            <input value={name} className="form-control" onChange={onNameChange} />
+          </div>
+
+          <div className="form-group col-md-4">
+            <label className="font-weight-bold">Team</label>
+            <select className="form-control" value={ teamId } onChange={onTeamChange}>
+              <option value=''>Select team</option>
+              {
+                teams.map(team => (
+                  <option key={team.id} value={team.id}>{team.name}</option>
+                ))
+              }
+            </select>
+          </div>
+        </div>
+        <button className="btn btn-success" disabled={name.length === 0}>Create</button>
       </form>
     </div>
   )

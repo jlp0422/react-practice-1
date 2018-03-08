@@ -46,9 +46,13 @@ const _CreateTeam = ({ submitButton, onNameChange, name }) => {
     <div>
       <h1>Add a new team</h1>
       <form onSubmit={submitButton}>
-        <label>Team name</label>
-        <input value={name} onChange={onNameChange} />
-        <button disabled={name.length === 0}>Create</button>
+      <div className="form-row">
+        <div className="form-group col-md-8">
+          <label className="font-weight-bold">Team name</label>
+          <input className="form-control"value={name} onChange={onNameChange} />
+        </div>
+      </div>
+      <button className="btn btn-success" disabled={name.length === 0}>Create</button>
       </form>
     </div>
   )
