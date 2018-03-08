@@ -6,7 +6,8 @@ import Players from './Players';
 import Player from './Player'
 import Teams from './Teams';
 import Team from './Team';
-import FormContainer from './FormContainer'
+import CreateTeam from './CreateTeam'
+import CreatePlayer from './CreatePlayer'
 import Nav from './Nav';
 import Home from './Home';
 import axios from 'axios';
@@ -24,6 +25,7 @@ export default class Main extends React.Component {
     this.selectTeamAndPlayers = this.selectTeamAndPlayers.bind(this)
     this.selectPlayerAndTeam = this.selectPlayerAndTeam.bind(this)
     this.onCreateTeam = this.onCreateTeam.bind(this)
+    this.onCreatePlayer = this.onCreatePlayer.bind(this)
   };
 
   componentDidMount() {
@@ -34,10 +36,6 @@ export default class Main extends React.Component {
       .then(res => res.data)
       .then(teams => this.setState({ teams }))
   };
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
-  }
 
   selectTeamAndPlayers(teamId) {
     const selectedTeam = this.state.teams.find(team => team.id === teamId)
@@ -52,18 +50,34 @@ export default class Main extends React.Component {
   }
 
   onCreateTeam(team) {
-    axios.post('/api/teams', (team))
+    axios.post('/api/teams', team)
       .then( res => res.data)
       .then( team => {
         const teams = [...this.state.teams, team];
         this.setState({ teams })
       })
       .then(this.setState({ name: '' }))
+      document.location.hash = '/teams'
+  }
+
+  onCreatePlayer(player) {
+    axios.post('/api/players', player)
+      .then( res => res.data)
+      .then( player => {
+        const players = [...this.state.players, player];
+        this.setState({ players })
+      })
+      .then(this.setState({
+        name: '',
+        teamId: ''
+      }))
+      document.location.hash = '/players'
+
   }
 
   render() {
     const { players, teams, selectedTeam, selectedTeamPlayers, selectedPlayer } = this.state
-    const { selectTeamAndPlayers, selectPlayerAndTeam, onCreateTeam } = this
+    const { selectTeamAndPlayers, selectPlayerAndTeam, onCreateTeam, onCreatePlayer } = this
     return (
       <Router>
         <div>
@@ -79,7 +93,9 @@ export default class Main extends React.Component {
 
           <Route path='/teams/:id' exact render={({ match }) => (<Team selectedTeam={selectedTeam} players={selectedTeamPlayers} id={match.params.id} selectTeamAndPlayers={ selectTeamAndPlayers }/> )} />
 
-          <Route path='/team/create' exact render={() => <FormContainer teams={ teams } onCreateTeam={ onCreateTeam} />} />
+          <Route path='/team/create' exact render={() => <CreateTeam teams={ teams } onCreateTeam={ onCreateTeam} />} />
+
+          <Route path='/player/create' exact render={() => <CreatePlayer teams={teams} players={players} onCreatePlayer={onCreatePlayer} />} />
 
         </div>
       </Router>

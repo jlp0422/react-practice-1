@@ -15,6 +15,7 @@ const Nav = ({ location }) => {
          )
         }
       </li>
+
       <li className="nav-item">
         {
          path.match(/players/) ? (
@@ -24,6 +25,7 @@ const Nav = ({ location }) => {
          )
         }
       </li>
+
       <li className="nav-item">
         {
          path.match(/teams/) ? (
@@ -33,6 +35,7 @@ const Nav = ({ location }) => {
          )
         }
       </li>
+
       <li className="nav-item">
         {
           path === '/team/create' ? (
@@ -40,6 +43,16 @@ const Nav = ({ location }) => {
           ) : (
             <Link className="nav-link font-weight-bold" to='/team/create'>Create Team</Link>
           )
+        }
+      </li>
+
+      <li className="nav-item">
+        {
+          path === '/player/create' ? (
+            <span className="nav-link active font-weight-bold">Create Player</span>
+          ) : (
+              <Link className="nav-link font-weight-bold" to='/player/create'>Create Player</Link>
+            )
         }
       </li>
 

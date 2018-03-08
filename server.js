@@ -31,6 +31,17 @@ app.get('/api/teams', (req, res, next) => {
     .catch(next)
 })
 
+app.post('/api/players', (req, res, next) => {
+  Player.create(req.body)
+    .then(player => {
+      return Player.findById(player.id, {
+        include: [ Team ]
+      })
+    })
+    .then( player => res.send(player))
+    .catch(next)
+})
+
 app.post('/api/teams', (req, res, next) => {
   Team.create(req.body)
     .then(team => {
