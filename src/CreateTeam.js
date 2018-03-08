@@ -44,7 +44,7 @@ export default class CreateTeam extends React.Component {
 const _CreateTeam = ({ submitButton, onNameChange, name }) => {
   return (
     <div>
-      <h1>Add a new team</h1>
+      <h1 style={{ marginBottom: 20 }}>Add a new team</h1>
       <form onSubmit={submitButton}>
       <div className="form-row">
         <div className="form-group col-md-8">

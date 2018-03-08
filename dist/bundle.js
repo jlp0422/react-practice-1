@@ -26950,7 +26950,7 @@ var _CreateTeam = function _CreateTeam(_ref) {
     null,
     _react2.default.createElement(
       'h1',
-      null,
+      { style: { marginBottom: 20 } },
       'Add a new team'
     ),
     _react2.default.createElement(
@@ -27084,7 +27084,7 @@ var _CreatePlayer = function _CreatePlayer(_ref) {
     null,
     _react2.default.createElement(
       'h1',
-      null,
+      { style: { marginBottom: 20 } },
       'Add a new player'
     ),
     _react2.default.createElement(

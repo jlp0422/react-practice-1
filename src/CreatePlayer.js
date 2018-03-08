@@ -44,7 +44,7 @@ export default class CreatePlayer extends React.Component {
 const _CreatePlayer = ({ submitButton, onTeamChange, onNameChange, name, teams, teamId }) => {
   return (
     <div>
-      <h1>Add a new player</h1>
+      <h1 style={{ marginBottom: 20 }}>Add a new player</h1>
       <form onSubmit={submitButton}>
         <div className="form-row">
           <div className="form-group col-md-6">
