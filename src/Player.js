@@ -19,14 +19,14 @@ export default class Player extends React.Component {
       .then( res => res.data)
       .then( players => players.find(player => player.id === this.props.id*1))
       .then( player => this.setState({ player: player, team: player.team}))
-  }
-
-  componentDidMount() {
-    axios.get('/api/teams')
-      .then(res => res.data)
-      .then(teams => teams.find(team => team.id === this.state.team.id))
-      .then(team => team.players.filter(player => player.id !== this.state.player.id))
-      .then(teammates => this.setState({ teammates }))
+      .then(() => {
+        const { player, team } = this.state
+        axios.get('/api/teams')
+          .then(res => res.data)
+          .then(teams => teams.find(_team => _team.id === team.id))
+          .then(team => team.players.filter(_player => _player.id !== player.id))
+          .then(teammates => this.setState({ teammates }))
+      })
   }
 
   render() {
@@ -40,7 +40,7 @@ const _Player = ({ player, team, teammates }) => {
   return (
     <div>
       <Helmet>
-        <title>{player.name}</title>
+        <title>{`${player.name} | ${team.name}`}</title>
       </Helmet>
       <h1>{ player.name}</h1>
       <h3>Team: { team.name }</h3>
