@@ -24433,6 +24433,10 @@ var _Team = __webpack_require__(115);
 
 var _Team2 = _interopRequireDefault(_Team);
 
+var _FormContainer = __webpack_require__(119);
+
+var _FormContainer2 = _interopRequireDefault(_FormContainer);
+
 var _Nav = __webpack_require__(116);
 
 var _Nav2 = _interopRequireDefault(_Nav);
@@ -24446,6 +24450,8 @@ var _axios = __webpack_require__(24);
 var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -24471,6 +24477,7 @@ var Main = function (_React$Component) {
     };
     _this.selectTeamAndPlayers = _this.selectTeamAndPlayers.bind(_this);
     _this.selectPlayerAndTeam = _this.selectPlayerAndTeam.bind(_this);
+    _this.onCreateTeam = _this.onCreateTeam.bind(_this);
     return _this;
   }
 
@@ -24489,6 +24496,11 @@ var Main = function (_React$Component) {
       }).then(function (teams) {
         return _this2.setState({ teams: teams });
       });
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      console.log(nextProps);
     }
   }, {
     key: 'selectTeamAndPlayers',
@@ -24513,6 +24525,18 @@ var Main = function (_React$Component) {
       this.setState({ selectedPlayer: selectedPlayer, selectedTeam: selectedTeam });
     }
   }, {
+    key: 'onCreateTeam',
+    value: function onCreateTeam(team) {
+      var _this3 = this;
+
+      _axios2.default.post('/api/teams', team).then(function (res) {
+        return res.data;
+      }).then(function (team) {
+        var teams = [].concat(_toConsumableArray(_this3.state.teams), [team]);
+        _this3.setState({ teams: teams });
+      }).then(this.setState({ name: '' }));
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _state = this.state,
@@ -24522,7 +24546,8 @@ var Main = function (_React$Component) {
           selectedTeamPlayers = _state.selectedTeamPlayers,
           selectedPlayer = _state.selectedPlayer;
       var selectTeamAndPlayers = this.selectTeamAndPlayers,
-          selectPlayerAndTeam = this.selectPlayerAndTeam;
+          selectPlayerAndTeam = this.selectPlayerAndTeam,
+          onCreateTeam = this.onCreateTeam;
 
       return _react2.default.createElement(
         _reactRouterDom.HashRouter,
@@ -24545,6 +24570,9 @@ var Main = function (_React$Component) {
           _react2.default.createElement(_reactRouterDom.Route, { path: '/teams/:id', exact: true, render: function render(_ref2) {
               var match = _ref2.match;
               return _react2.default.createElement(_Team2.default, { selectedTeam: selectedTeam, players: selectedTeamPlayers, id: match.params.id, selectTeamAndPlayers: selectTeamAndPlayers });
+            } }),
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/team/create', exact: true, render: function render() {
+              return _react2.default.createElement(_FormContainer2.default, { teams: teams, onCreateTeam: onCreateTeam });
             } })
         )
       );
@@ -26864,6 +26892,19 @@ var Nav = function Nav(_ref) {
         { className: 'nav-link font-weight-bold', to: '/teams' },
         'Teams'
       )
+    ),
+    _react2.default.createElement(
+      'li',
+      { className: 'nav-item' },
+      path === '/team/create' ? _react2.default.createElement(
+        'span',
+        { className: 'nav-link active font-weight-bold' },
+        'Create Team'
+      ) : _react2.default.createElement(
+        _reactRouterDom.Link,
+        { className: 'nav-link font-weight-bold', to: '/team/create' },
+        'Create Team'
+      )
     )
   );
 };
@@ -26911,6 +26952,139 @@ var Home = function Home() {
 };
 
 exports.default = Home;
+
+/***/ }),
+/* 118 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var CreateTeam = function CreateTeam(_ref) {
+  var onNameChange = _ref.onNameChange,
+      submitButton = _ref.submitButton,
+      name = _ref.name;
+
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'h1',
+      null,
+      'Add a new team'
+    ),
+    _react2.default.createElement(
+      'form',
+      { onSubmit: submitButton },
+      _react2.default.createElement(
+        'label',
+        null,
+        'Team name'
+      ),
+      _react2.default.createElement('input', { value: name, onChange: onNameChange }),
+      _react2.default.createElement(
+        'button',
+        { disabled: name.length === 0 },
+        'Create'
+      )
+    )
+  );
+}; /* eslint-disable */
+exports.default = CreateTeam;
+
+/***/ }),
+/* 119 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouterDom = __webpack_require__(7);
+
+var _CreateTeam = __webpack_require__(118);
+
+var _CreateTeam2 = _interopRequireDefault(_CreateTeam);
+
+var _axios = __webpack_require__(24);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* eslint-disable */
+
+
+var FormContainer = function (_React$Component) {
+  _inherits(FormContainer, _React$Component);
+
+  function FormContainer(props) {
+    _classCallCheck(this, FormContainer);
+
+    var _this = _possibleConstructorReturn(this, (FormContainer.__proto__ || Object.getPrototypeOf(FormContainer)).call(this, props));
+
+    _this.state = {
+      name: ''
+    };
+    _this.onNameChange = _this.onNameChange.bind(_this);
+    _this.submitButton = _this.submitButton.bind(_this);
+
+    return _this;
+  }
+
+  _createClass(FormContainer, [{
+    key: 'onNameChange',
+    value: function onNameChange(ev) {
+      var name = ev.target.value;
+      this.setState({ name: name });
+    }
+  }, {
+    key: 'submitButton',
+    value: function submitButton(ev) {
+      ev.preventDefault();
+      var name = this.state.name;
+
+      this.props.onCreateTeam({ name: name });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var onNameChange = this.onNameChange,
+          submitButton = this.submitButton;
+      var name = this.state.name;
+      var teams = this.props.teams;
+
+      return _react2.default.createElement(_CreateTeam2.default, { onNameChange: onNameChange, submitButton: submitButton, name: name });
+    }
+  }]);
+
+  return FormContainer;
+}(_react2.default.Component);
+
+exports.default = FormContainer;
 
 /***/ })
 /******/ ]);

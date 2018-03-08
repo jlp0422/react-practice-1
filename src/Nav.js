@@ -33,6 +33,16 @@ const Nav = ({ location }) => {
          )
         }
       </li>
+      <li className="nav-item">
+        {
+          path === '/team/create' ? (
+            <span className="nav-link active font-weight-bold">Create Team</span>
+          ) : (
+            <Link className="nav-link font-weight-bold" to='/team/create'>Create Team</Link>
+          )
+        }
+      </li>
+
     </ul>
   )
 }
