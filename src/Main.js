@@ -71,6 +71,11 @@ export default class Main extends React.Component {
         name: '',
         teamId: ''
       }))
+      .then(() => {
+        axios.get('/api/teams')
+          .then(res => res.data)
+          .then( teams => this.setState({ teams }))
+      })
       document.location.hash = '/players'
 
   }

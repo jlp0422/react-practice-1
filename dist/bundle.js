@@ -24550,7 +24550,13 @@ var Main = function (_React$Component) {
       }).then(this.setState({
         name: '',
         teamId: ''
-      }));
+      })).then(function () {
+        _axios2.default.get('/api/teams').then(function (res) {
+          return res.data;
+        }).then(function (teams) {
+          return _this4.setState({ teams: teams });
+        });
+      });
       document.location.hash = '/players';
     }
   }, {
