@@ -64,7 +64,7 @@ const _CreatePlayer = ({ submitButton, onTeamChange, onNameChange, name, teams, 
             </select>
           </div>
         </div>
-        <button className="btn btn-success" disabled={name.length === 0}>Create</button>
+        <button className="btn btn-success" disabled={name.length === 0 || teamId === ''}>Create</button>
       </form>
     </div>
   )

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from 'react';
-import { Route, HashRouter as Router, Link } from 'react-router-dom';
+import { Route, HashRouter as Router, Link, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Players from './Players';
 import Player from './Player'
@@ -57,7 +57,8 @@ export default class Main extends React.Component {
         this.setState({ teams })
       })
       .then(this.setState({ name: '' }))
-      document.location.hash = '/teams'
+      .then(() => document.location.hash = '/teams')
+
   }
 
   onCreatePlayer(player) {
@@ -76,7 +77,7 @@ export default class Main extends React.Component {
           .then(res => res.data)
           .then( teams => this.setState({ teams }))
       })
-      document.location.hash = '/players'
+      .then(() => document.location.hash = '/players')
 
   }
 
@@ -87,20 +88,53 @@ export default class Main extends React.Component {
       <Router>
         <div>
           <Route component={ Nav }/>
+          <Switch>
 
-          <Route path='/' exact component={ Home } />
+            <Route path='/' exact component={ Home } />
 
-          <Route path='/players' exact render={() => (<Players players={players} selectPlayerAndTeam={ selectPlayerAndTeam }/>)} />
+            <Route path='/player/create' exact render={() => (
+              <CreatePlayer
+                teams={teams}
+                players={players}
+                onCreatePlayer={onCreatePlayer} />
+            )} />
 
-          <Route path='/players/:id' exact render={({ match }) => ( <Player id={match.params.id} /> )} />
+            <Route path='/players/:id' exact render={({ match }) => (
+              <Player
+                id={ match.params.id }
+                player={ selectedPlayer }
+                team={ selectedTeam }
+                players={ players }
+                teams={ teams }/>
+            )} />
 
-          <Route path='/teams' exact render={() => (<Teams teams={teams} selectTeamAndPlayers={ selectTeamAndPlayers }/>)} />
+            <Route path='/players' exact render={() => (
+              <Players
+                players={ players }
+                selectPlayerAndTeam={ selectPlayerAndTeam }/>
+            )} />
 
-          <Route path='/teams/:id' exact render={({ match }) => (<Team selectedTeam={selectedTeam} players={selectedTeamPlayers} id={match.params.id} selectTeamAndPlayers={ selectTeamAndPlayers }/> )} />
+            <Route path='/team/create' exact render={() => (
+              <CreateTeam
+                teams={ teams }
+                onCreateTeam={ onCreateTeam } />
+            )} />
 
-          <Route path='/team/create' exact render={() => <CreateTeam teams={ teams } onCreateTeam={ onCreateTeam} />} />
+            <Route path='/teams/:id' exact render={({ match }) => (
+              <Team
+                id={ match.params.id }
+                players={ players }
+                team={ selectedTeam }
+                teams={ teams } />
+              )} />
 
-          <Route path='/player/create' exact render={() => <CreatePlayer teams={teams} players={players} onCreatePlayer={onCreatePlayer} />} />
+            <Route path='/teams' exact render={() => (
+              <Teams
+                teams={ teams }
+                selectTeamAndPlayers={ selectTeamAndPlayers }/>
+              )} />
+
+          </Switch>
 
         </div>
       </Router>

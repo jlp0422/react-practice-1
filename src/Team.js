@@ -13,11 +13,16 @@ export default class Team extends React.Component {
     }
   }
 
-  componentWillMount(){
-    axios.get('/api/teams')
-      .then( res => res.data)
-      .then( teams => teams.find(team => team.id === this.props.id*1))
-      .then( team => this.setState({ team: team, players: team.players}))
+  componentWillReceiveProps(nextProps) {
+    const team = nextProps.teams.find( team => team.id === nextProps.id*1)
+    const players = nextProps.players.filter( player => player.team.id === nextProps.id*1)
+    players && team ? this.setState({ team, players }) : null
+  }
+
+  componentDidMount() {
+    const players = this.props.players.filter( player => player.team.id === this.props.id*1)
+    const { team } = this.props
+    players && team ? this.setState({ players, team }) : null
   }
 
   render() {

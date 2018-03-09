@@ -28,6 +28,14 @@ export default class CreateTeam extends React.Component {
   submitButton(ev) {
     ev.preventDefault()
     const { name } = this.state
+    // const teams = this.props.teams
+    // teams.forEach(team => (
+    //   team.name === name ? (
+    //     alert('Team already exists')
+    //   ) : (
+    //     console.log('no match')
+    //   )
+    // ))
     this.props.onCreateTeam({ name })
   }
 

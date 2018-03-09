@@ -14,19 +14,18 @@ export default class Player extends React.Component {
     }
   }
 
-  componentWillMount() {
-    axios.get('/api/players')
-      .then( res => res.data)
-      .then( players => players.find(player => player.id === this.props.id*1))
-      .then( player => this.setState({ player: player, team: player.team}))
-      .then(() => {
-        const { player, team } = this.state
-        axios.get('/api/teams')
-          .then(res => res.data)
-          .then(teams => teams.find(_team => _team.id === team.id))
-          .then(team => team.players.filter(_player => _player.id !== player.id))
-          .then(teammates => this.setState({ teammates }))
-      })
+  componentWillReceiveProps(nextProps) {
+    const playerId = nextProps.id
+    const player = nextProps.players.find( player => player.id === playerId*1)
+    const team = player ? player.team : null
+    const teammates = player ? nextProps.players.filter( _player => _player.team.id === player.team.id && _player.id !== player.id) : null
+    player && team && teammates ? this.setState({ player, team, teammates }) : null
+  }
+
+  componentDidMount() {
+    const { player, team, players } = this.props
+    const teammates = players.filter(_player => _player.team.id === player.team.id && _player.id !== player.id)
+    this.setState({ player, team, teammates })
   }
 
   render() {

@@ -24534,8 +24534,9 @@ var Main = function (_React$Component) {
       }).then(function (team) {
         var teams = [].concat(_toConsumableArray(_this3.state.teams), [team]);
         _this3.setState({ teams: teams });
-      }).then(this.setState({ name: '' }));
-      document.location.hash = '/teams';
+      }).then(this.setState({ name: '' })).then(function () {
+        return document.location.hash = '/teams';
+      });
     }
   }, {
     key: 'onCreatePlayer',
@@ -24556,8 +24557,9 @@ var Main = function (_React$Component) {
         }).then(function (teams) {
           return _this4.setState({ teams: teams });
         });
+      }).then(function () {
+        return document.location.hash = '/players';
       });
-      document.location.hash = '/players';
     }
   }, {
     key: 'render',
@@ -24580,27 +24582,49 @@ var Main = function (_React$Component) {
           'div',
           null,
           _react2.default.createElement(_reactRouterDom.Route, { component: _Nav2.default }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: '/', exact: true, component: _Home2.default }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: '/players', exact: true, render: function render() {
-              return _react2.default.createElement(_Players2.default, { players: players, selectPlayerAndTeam: selectPlayerAndTeam });
-            } }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: '/players/:id', exact: true, render: function render(_ref) {
-              var match = _ref.match;
-              return _react2.default.createElement(_Player2.default, { id: match.params.id });
-            } }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: '/teams', exact: true, render: function render() {
-              return _react2.default.createElement(_Teams2.default, { teams: teams, selectTeamAndPlayers: selectTeamAndPlayers });
-            } }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: '/teams/:id', exact: true, render: function render(_ref2) {
-              var match = _ref2.match;
-              return _react2.default.createElement(_Team2.default, { selectedTeam: selectedTeam, players: selectedTeamPlayers, id: match.params.id, selectTeamAndPlayers: selectTeamAndPlayers });
-            } }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: '/team/create', exact: true, render: function render() {
-              return _react2.default.createElement(_CreateTeam2.default, { teams: teams, onCreateTeam: onCreateTeam });
-            } }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: '/player/create', exact: true, render: function render() {
-              return _react2.default.createElement(_CreatePlayer2.default, { teams: teams, players: players, onCreatePlayer: onCreatePlayer });
-            } })
+          _react2.default.createElement(
+            _reactRouterDom.Switch,
+            null,
+            _react2.default.createElement(_reactRouterDom.Route, { path: '/', exact: true, component: _Home2.default }),
+            _react2.default.createElement(_reactRouterDom.Route, { path: '/player/create', exact: true, render: function render() {
+                return _react2.default.createElement(_CreatePlayer2.default, {
+                  teams: teams,
+                  players: players,
+                  onCreatePlayer: onCreatePlayer });
+              } }),
+            _react2.default.createElement(_reactRouterDom.Route, { path: '/players/:id', exact: true, render: function render(_ref) {
+                var match = _ref.match;
+                return _react2.default.createElement(_Player2.default, {
+                  id: match.params.id,
+                  player: selectedPlayer,
+                  team: selectedTeam,
+                  players: players,
+                  teams: teams });
+              } }),
+            _react2.default.createElement(_reactRouterDom.Route, { path: '/players', exact: true, render: function render() {
+                return _react2.default.createElement(_Players2.default, {
+                  players: players,
+                  selectPlayerAndTeam: selectPlayerAndTeam });
+              } }),
+            _react2.default.createElement(_reactRouterDom.Route, { path: '/team/create', exact: true, render: function render() {
+                return _react2.default.createElement(_CreateTeam2.default, {
+                  teams: teams,
+                  onCreateTeam: onCreateTeam });
+              } }),
+            _react2.default.createElement(_reactRouterDom.Route, { path: '/teams/:id', exact: true, render: function render(_ref2) {
+                var match = _ref2.match;
+                return _react2.default.createElement(_Team2.default, {
+                  id: match.params.id,
+                  players: players,
+                  team: selectedTeam,
+                  teams: teams });
+              } }),
+            _react2.default.createElement(_reactRouterDom.Route, { path: '/teams', exact: true, render: function render() {
+                return _react2.default.createElement(_Teams2.default, {
+                  teams: teams,
+                  selectTeamAndPlayers: selectTeamAndPlayers });
+              } })
+          )
         )
       );
     }
@@ -25662,45 +25686,38 @@ var Player = function (_React$Component) {
   }
 
   _createClass(Player, [{
-    key: 'componentWillMount',
-    value: function componentWillMount() {
-      var _this2 = this;
-
-      _axios2.default.get('/api/players').then(function (res) {
-        return res.data;
-      }).then(function (players) {
-        return players.find(function (player) {
-          return player.id === _this2.props.id * 1;
-        });
-      }).then(function (player) {
-        return _this2.setState({ player: player, team: player.team });
-      }).then(function () {
-        var _state = _this2.state,
-            player = _state.player,
-            team = _state.team;
-
-        _axios2.default.get('/api/teams').then(function (res) {
-          return res.data;
-        }).then(function (teams) {
-          return teams.find(function (_team) {
-            return _team.id === team.id;
-          });
-        }).then(function (team) {
-          return team.players.filter(function (_player) {
-            return _player.id !== player.id;
-          });
-        }).then(function (teammates) {
-          return _this2.setState({ teammates: teammates });
-        });
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      var playerId = nextProps.id;
+      var player = nextProps.players.find(function (player) {
+        return player.id === playerId * 1;
       });
+      var team = player ? player.team : null;
+      var teammates = player ? nextProps.players.filter(function (_player) {
+        return _player.team.id === player.team.id && _player.id !== player.id;
+      }) : null;
+      player && team && teammates ? this.setState({ player: player, team: team, teammates: teammates }) : null;
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _props = this.props,
+          player = _props.player,
+          team = _props.team,
+          players = _props.players;
+
+      var teammates = players.filter(function (_player) {
+        return _player.team.id === player.team.id && _player.id !== player.id;
+      });
+      this.setState({ player: player, team: team, teammates: teammates });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _state2 = this.state,
-          player = _state2.player,
-          team = _state2.team,
-          teammates = _state2.teammates;
+      var _state = this.state,
+          player = _state.player,
+          team = _state.team,
+          teammates = _state.teammates;
 
       return _react2.default.createElement(_Player, { player: player, team: team, teammates: teammates });
     }
@@ -26772,19 +26789,27 @@ var Team = function (_React$Component) {
   }
 
   _createClass(Team, [{
-    key: 'componentWillMount',
-    value: function componentWillMount() {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      var team = nextProps.teams.find(function (team) {
+        return team.id === nextProps.id * 1;
+      });
+      var players = nextProps.players.filter(function (player) {
+        return player.team.id === nextProps.id * 1;
+      });
+      players && team ? this.setState({ team: team, players: players }) : null;
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
       var _this2 = this;
 
-      _axios2.default.get('/api/teams').then(function (res) {
-        return res.data;
-      }).then(function (teams) {
-        return teams.find(function (team) {
-          return team.id === _this2.props.id * 1;
-        });
-      }).then(function (team) {
-        return _this2.setState({ team: team, players: team.players });
+      var players = this.props.players.filter(function (player) {
+        return player.team.id === _this2.props.id * 1;
       });
+      var team = this.props.team;
+
+      players && team ? this.setState({ players: players, team: team }) : null;
     }
   }, {
     key: 'render',
@@ -26919,6 +26944,14 @@ var CreateTeam = function (_React$Component) {
     value: function submitButton(ev) {
       ev.preventDefault();
       var name = this.state.name;
+      // const teams = this.props.teams
+      // teams.forEach(team => (
+      //   team.name === name ? (
+      //     alert('Team already exists')
+      //   ) : (
+      //     console.log('no match')
+      //   )
+      // ))
 
       this.props.onCreateTeam({ name: name });
     }
@@ -27131,7 +27164,7 @@ var _CreatePlayer = function _CreatePlayer(_ref) {
       ),
       _react2.default.createElement(
         'button',
-        { className: 'btn btn-success', disabled: name.length === 0 },
+        { className: 'btn btn-success', disabled: name.length === 0 || teamId === '' },
         'Create'
       )
     )
