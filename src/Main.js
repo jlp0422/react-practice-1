@@ -78,7 +78,6 @@ export default class Main extends React.Component {
           .then( teams => this.setState({ teams }))
       })
       .then(() => document.location.hash = '/players')
-
   }
 
   render() {

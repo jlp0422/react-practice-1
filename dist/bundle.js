@@ -25680,15 +25680,29 @@ var Player = function (_React$Component) {
     _this.state = {
       player: {},
       team: {},
-      teammates: []
+      teammates: [],
+      teams: []
     };
+    _this.submitButton = _this.submitButton.bind(_this);
     return _this;
   }
 
   _createClass(Player, [{
+    key: 'submitButton',
+    value: function submitButton(ev) {
+      ev.preventDefault();
+      var _state = this.state,
+          name = _state.name,
+          teamId = _state.teamId;
+
+      this.props.onCreatePlayer({ name: name, teamId: teamId });
+    }
+  }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       var playerId = nextProps.id;
+      var teams = nextProps.teams;
+
       var player = nextProps.players.find(function (player) {
         return player.id === playerId * 1;
       });
@@ -25696,7 +25710,7 @@ var Player = function (_React$Component) {
       var teammates = player ? nextProps.players.filter(function (_player) {
         return _player.team.id === player.team.id && _player.id !== player.id;
       }) : null;
-      player && team && teammates ? this.setState({ player: player, team: team, teammates: teammates }) : null;
+      player && team && teammates ? this.setState({ player: player, team: team, teammates: teammates, teams: teams }) : null;
     }
   }, {
     key: 'componentDidMount',
@@ -25704,22 +25718,78 @@ var Player = function (_React$Component) {
       var _props = this.props,
           player = _props.player,
           team = _props.team,
-          players = _props.players;
+          players = _props.players,
+          teams = _props.teams;
 
       var teammates = players.filter(function (_player) {
         return _player.team.id === player.team.id && _player.id !== player.id;
       });
-      this.setState({ player: player, team: team, teammates: teammates });
+      this.setState({ player: player, team: team, teammates: teammates, teams: teams });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _state = this.state,
-          player = _state.player,
-          team = _state.team,
-          teammates = _state.teammates;
+      var _state2 = this.state,
+          player = _state2.player,
+          team = _state2.team,
+          teammates = _state2.teammates,
+          teams = _state2.teams;
 
-      return _react2.default.createElement(_Player, { player: player, team: team, teammates: teammates });
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          _reactHelmet.Helmet,
+          null,
+          _react2.default.createElement(
+            'title',
+            null,
+            player.name + ' | ' + team.name
+          )
+        ),
+        _react2.default.createElement(
+          'h1',
+          null,
+          player.name
+        ),
+        _react2.default.createElement(
+          'h3',
+          null,
+          'Team: ',
+          team.name
+        ),
+        _react2.default.createElement(
+          'h3',
+          null,
+          'Teammates'
+        ),
+        _react2.default.createElement(
+          'ul',
+          null,
+          teammates.length ? teammates.map(function (teammate) {
+            return _react2.default.createElement(
+              'li',
+              { key: teammate.id },
+              teammate.name
+            );
+          }) : _react2.default.createElement(
+            'li',
+            null,
+            'No teammates'
+          )
+        ),
+        _react2.default.createElement('br', null),
+        _react2.default.createElement('br', null),
+        _react2.default.createElement(
+          'p',
+          null,
+          _react2.default.createElement(
+            _reactRouterDom.Link,
+            { to: '/players' },
+            '\xAB Back to all players'
+          )
+        )
+      );
     }
   }]);
 
@@ -25727,70 +25797,6 @@ var Player = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = Player;
-
-
-var _Player = function _Player(_ref) {
-  var player = _ref.player,
-      team = _ref.team,
-      teammates = _ref.teammates;
-
-  // const teammates = team.name ? team.players.filter(p => p.id !== player.id) : []
-  return _react2.default.createElement(
-    'div',
-    null,
-    _react2.default.createElement(
-      _reactHelmet.Helmet,
-      null,
-      _react2.default.createElement(
-        'title',
-        null,
-        player.name + ' | ' + team.name
-      )
-    ),
-    _react2.default.createElement(
-      'h1',
-      null,
-      player.name
-    ),
-    _react2.default.createElement(
-      'h3',
-      null,
-      'Team: ',
-      team.name
-    ),
-    _react2.default.createElement(
-      'h3',
-      null,
-      'Teammates'
-    ),
-    _react2.default.createElement(
-      'ul',
-      null,
-      teammates.length ? teammates.map(function (teammate) {
-        return _react2.default.createElement(
-          'li',
-          { key: teammate.id },
-          teammate.name
-        );
-      }) : _react2.default.createElement(
-        'li',
-        null,
-        'No teammates'
-      )
-    ),
-    _react2.default.createElement('br', null),
-    _react2.default.createElement('br', null),
-    _react2.default.createElement(
-      'p',
-      null,
-      _react2.default.createElement(
-        _reactRouterDom.Link,
-        { to: '/players' },
-        '\xAB Back to all players'
-      )
-    )
-  );
-};
 
 /***/ }),
 /* 96 */
@@ -26818,7 +26824,51 @@ var Team = function (_React$Component) {
           players = _state.players,
           team = _state.team;
 
-      return _react2.default.createElement(_Team, { players: players, selectedTeam: team });
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          _reactHelmet.Helmet,
+          null,
+          _react2.default.createElement(
+            'title',
+            null,
+            team.name
+          )
+        ),
+        team && _react2.default.createElement(
+          'h1',
+          null,
+          team.name
+        ),
+        _react2.default.createElement(
+          'h3',
+          null,
+          'Players'
+        ),
+        _react2.default.createElement(
+          'ul',
+          null,
+          players.map(function (player) {
+            return _react2.default.createElement(
+              'li',
+              { key: player.id },
+              player.name
+            );
+          })
+        ),
+        _react2.default.createElement('br', null),
+        _react2.default.createElement('br', null),
+        _react2.default.createElement(
+          'p',
+          null,
+          _react2.default.createElement(
+            _reactRouterDom.Link,
+            { to: '/teams' },
+            '\xAB Back to all teams'
+          )
+        )
+      );
     }
   }]);
 
@@ -26826,58 +26876,6 @@ var Team = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = Team;
-
-
-var _Team = function _Team(_ref) {
-  var players = _ref.players,
-      selectedTeam = _ref.selectedTeam;
-
-  return _react2.default.createElement(
-    'div',
-    null,
-    _react2.default.createElement(
-      _reactHelmet.Helmet,
-      null,
-      _react2.default.createElement(
-        'title',
-        null,
-        selectedTeam.name
-      )
-    ),
-    selectedTeam && _react2.default.createElement(
-      'h1',
-      null,
-      selectedTeam.name
-    ),
-    _react2.default.createElement(
-      'h3',
-      null,
-      'Players'
-    ),
-    _react2.default.createElement(
-      'ul',
-      null,
-      players.map(function (player) {
-        return _react2.default.createElement(
-          'li',
-          { key: player.id },
-          player.name
-        );
-      })
-    ),
-    _react2.default.createElement('br', null),
-    _react2.default.createElement('br', null),
-    _react2.default.createElement(
-      'p',
-      null,
-      _react2.default.createElement(
-        _reactRouterDom.Link,
-        { to: '/teams' },
-        '\xAB Back to all teams'
-      )
-    )
-  );
-};
 
 /***/ }),
 /* 116 */

@@ -27,32 +27,27 @@ export default class Team extends React.Component {
 
   render() {
     const { players, team } = this.state
-    return (<_Team  players={ players } selectedTeam={ team } />);
-  }
-}
-
-
-const _Team = ({ players, selectedTeam}) => {
-  return (
-    <div>
-      <Helmet>
-        <title>{ selectedTeam.name }</title>
-      </Helmet>
-      {
-        selectedTeam &&
-        <h1>{selectedTeam.name}</h1>
-      }
-
-      <h3>Players</h3>
-      <ul>
+    return (
+      <div>
+        <Helmet>
+          <title>{team.name}</title>
+        </Helmet>
         {
-          players.map(player => (
-            <li key={player.id}>{player.name}</li>
-          ))
+          team &&
+          <h1>{team.name}</h1>
         }
-      </ul>
-      <br /><br />
-      <p><Link to='/teams'>&laquo; Back to all teams</Link></p>
-    </div>
-  )
+
+        <h3>Players</h3>
+        <ul>
+          {
+            players.map(player => (
+              <li key={player.id}>{player.name}</li>
+            ))
+          }
+        </ul>
+        <br /><br />
+        <p><Link to='/teams'>&laquo; Back to all teams</Link></p>
+      </div>
+    )
+  }
 }
