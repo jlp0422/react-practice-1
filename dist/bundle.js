@@ -24567,11 +24567,9 @@ var Main = function (_React$Component) {
     value: function onChangeTeam(player) {
       var _this5 = this;
 
-      // console.log(player)
       _axios2.default.put('/api/players/' + player.id, player).then(function (res) {
         return res.data;
       }).then(function (player) {
-        // console.log(player)
         var players = _this5.state.players.filter(function (_player) {
           return _player.id !== player.id;
         });
@@ -24580,6 +24578,7 @@ var Main = function (_React$Component) {
         });
         player.team = playerTeam;
         _this5.setState({ players: [].concat(_toConsumableArray(players), [player]) });
+        console.log(_this5.state.teams);
       }).then(function () {
         return document.location.hash = '/players';
       });

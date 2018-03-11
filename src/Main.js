@@ -82,15 +82,14 @@ export default class Main extends React.Component {
   }
 
   onChangeTeam(player) {
-    // console.log(player)
     axios.put(`/api/players/${player.id}`, player)
       .then( res => res.data)
       .then( player => {
-        // console.log(player)
         const players = this.state.players.filter( _player => _player.id !== player.id)
         const playerTeam = this.state.teams.find( team => team.id === player.teamId*1)
         player.team = playerTeam
         this.setState({ players: [...players, player]})
+        console.log(this.state.teams)
       })
       .then(() => document.location.hash = '/players')
   }
