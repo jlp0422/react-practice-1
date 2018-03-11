@@ -58,6 +58,7 @@ app.put('/api/players/:id', (req, res, next) => {
   Player.findById(req.params.id)
     .then( player => {
       player.teamId = req.body.newTeam.id
+      player.team = req.body.newTeam
       return player.save()
     })
     .then( player => res.send(player))

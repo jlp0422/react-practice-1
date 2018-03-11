@@ -24567,19 +24567,19 @@ var Main = function (_React$Component) {
     value: function onChangeTeam(player) {
       var _this5 = this;
 
+      // console.log(player)
       _axios2.default.put('/api/players/' + player.id, player).then(function (res) {
         return res.data;
       }).then(function (player) {
+        // console.log(player)
         var players = _this5.state.players.filter(function (_player) {
           return _player.id !== player.id;
         });
         var playerTeam = _this5.state.teams.find(function (team) {
-          return team.id === player.id * 1;
+          return team.id === player.teamId * 1;
         });
-        // console.log(playerTeam)
         player.team = playerTeam;
         _this5.setState({ players: [].concat(_toConsumableArray(players), [player]) });
-        // console.log(this.state.players)
       }).then(function () {
         return document.location.hash = '/players';
       });
@@ -25739,8 +25739,6 @@ var Player = function (_React$Component) {
       var team = player && teams.find(function (team) {
         return player.teamId === team.id;
       });
-      console.log('player', player);
-      console.log('team', team);
       var teammates = player && players.filter(function (_player) {
         return _player.team.id === player.team.id && _player.id !== player.id;
       });

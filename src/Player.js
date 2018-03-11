@@ -33,8 +33,6 @@ export default class Player extends React.Component {
   setPlayerInfo(players, teams, id) {
     const player = players.find( player => player.id === id)
     const team = player && teams.find( team => player.teamId === team.id)
-    console.log('player', player)
-    console.log('team', team)
     const teammates = player && players.filter( _player =>  _player.team.id === player.team.id && _player.id !== player.id)
     player && team && this.setState({ player, players, teams, teammates, team, newTeam: player.team })
   }
