@@ -11,6 +11,7 @@ export default class Team extends React.Component {
       team: {},
       players: []
     }
+    this.setTeamInfo = this.setTeamInfo.bind(this)
   }
 
   setTeamInfo(players, teams, id) {

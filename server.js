@@ -54,7 +54,14 @@ app.post('/api/teams', (req, res, next) => {
 })
 
 app.put('/api/players/:id', (req, res, next) => {
-  console.log(req.body)
+  // console.log(req.body)
+  Player.findById(req.params.id)
+    .then( player => {
+      player.teamId = req.body.newTeam.id
+      return player.save()
+    })
+    .then( player => res.send(player))
+    .catch(next)
 })
 
 const port = process.env.PORT || 3000;

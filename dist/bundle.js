@@ -24565,11 +24565,23 @@ var Main = function (_React$Component) {
   }, {
     key: 'onChangeTeam',
     value: function onChangeTeam(player) {
-      // console.log(typeof player.playerId)
-      _axios2.default.put('/api/players/' + player.playerId, player.newTeamId).then(function (res) {
+      var _this5 = this;
+
+      _axios2.default.put('/api/players/' + player.id, player).then(function (res) {
         return res.data;
       }).then(function (player) {
-        return console.log(player);
+        var players = _this5.state.players.filter(function (_player) {
+          return _player.id !== player.id;
+        });
+        var playerTeam = _this5.state.teams.find(function (team) {
+          return team.id === player.id * 1;
+        });
+        // console.log(playerTeam)
+        player.team = playerTeam;
+        _this5.setState({ players: [].concat(_toConsumableArray(players), [player]) });
+        // console.log(this.state.players)
+      }).then(function () {
+        return document.location.hash = '/players';
       });
     }
   }, {
@@ -25695,10 +25707,11 @@ var Player = function (_React$Component) {
       team: {},
       teammates: [],
       teams: [],
-      newTeamId: ''
+      newTeam: {}
     };
     _this.submitButton = _this.submitButton.bind(_this);
     _this.onTeamChange = _this.onTeamChange.bind(_this);
+    _this.setPlayerInfo = _this.setPlayerInfo.bind(_this);
     return _this;
   }
 
@@ -25706,19 +25719,16 @@ var Player = function (_React$Component) {
     key: 'submitButton',
     value: function submitButton(ev) {
       ev.preventDefault();
-      var _state = this.state,
-          player = _state.player,
-          newTeamId = _state.newTeamId;
-
-      var playerId = player.id * 1;
-      var teamId = newTeamId * 1;
-      this.props.onChangeTeam({ playerId: playerId, teamId: teamId });
+      this.props.onChangeTeam({ id: this.props.id, newTeam: this.state.newTeam });
     }
   }, {
     key: 'onTeamChange',
     value: function onTeamChange(ev) {
       var newTeamId = ev.target.value;
-      this.setState({ newTeamId: newTeamId });
+      var newTeam = this.state.teams.find(function (team) {
+        return team.id === newTeamId * 1;
+      });
+      this.setState({ newTeam: newTeam });
     }
   }, {
     key: 'setPlayerInfo',
@@ -25726,10 +25736,15 @@ var Player = function (_React$Component) {
       var player = players.find(function (player) {
         return player.id === id;
       });
-      var teammates = players.filter(function (_player) {
+      var team = player && teams.find(function (team) {
+        return player.teamId === team.id;
+      });
+      console.log('player', player);
+      console.log('team', team);
+      var teammates = player && players.filter(function (_player) {
         return _player.team.id === player.team.id && _player.id !== player.id;
       });
-      player && this.setState({ player: player, players: players, teams: teams, teammates: teammates });
+      player && team && this.setState({ player: player, players: players, teams: teams, teammates: teammates, team: team, newTeam: player.team });
     }
   }, {
     key: 'componentWillReceiveProps',
@@ -25744,12 +25759,12 @@ var Player = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _state2 = this.state,
-          player = _state2.player,
-          team = _state2.team,
-          teammates = _state2.teammates,
-          teams = _state2.teams,
-          newTeamId = _state2.newTeamId;
+      var _state = this.state,
+          player = _state.player,
+          team = _state.team,
+          teammates = _state.teammates,
+          teams = _state.teams,
+          newTeam = _state.newTeam;
       var onTeamChange = this.onTeamChange,
           submitButton = this.submitButton;
 
@@ -25801,24 +25816,32 @@ var Player = function (_React$Component) {
           'form',
           { onSubmit: submitButton },
           _react2.default.createElement(
-            'label',
-            null,
-            'Change Team'
-          ),
-          teams && _react2.default.createElement(
-            'select',
-            { onChange: onTeamChange, value: newTeamId },
-            teams.map(function (team) {
-              return _react2.default.createElement(
-                'option',
-                { value: team.id, key: team.id },
-                team.name
-              );
-            })
+            'div',
+            { className: 'form-row' },
+            _react2.default.createElement(
+              'div',
+              { className: 'form-group col-md-6' },
+              _react2.default.createElement(
+                'label',
+                { className: 'font-weight-bold' },
+                'Change Team'
+              ),
+              teams && _react2.default.createElement(
+                'select',
+                { className: 'form-control', onChange: onTeamChange, value: newTeam.id },
+                teams.map(function (team) {
+                  return _react2.default.createElement(
+                    'option',
+                    { value: team.id, key: team.id },
+                    team.name
+                  );
+                })
+              )
+            )
           ),
           _react2.default.createElement(
             'button',
-            null,
+            { className: 'btn btn-outline-success' },
             'Update'
           )
         ),
@@ -26834,6 +26857,7 @@ var Team = function (_React$Component) {
       team: {},
       players: []
     };
+    _this.setTeamInfo = _this.setTeamInfo.bind(_this);
     return _this;
   }
 

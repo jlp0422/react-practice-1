@@ -12,29 +12,31 @@ export default class Player extends React.Component {
       team: {},
       teammates: [],
       teams: [],
-      newTeamId: ''
+      newTeam: {}
     }
     this.submitButton = this.submitButton.bind(this)
     this.onTeamChange = this.onTeamChange.bind(this)
+    this.setPlayerInfo = this.setPlayerInfo.bind(this)
   }
 
   submitButton(ev) {
     ev.preventDefault()
-    const { player, newTeamId } = this.state
-    const playerId = player.id*1
-    const teamId = newTeamId*1
-    this.props.onChangeTeam({ playerId, teamId })
+    this.props.onChangeTeam({ id: this.props.id, newTeam: this.state.newTeam })
   }
 
   onTeamChange(ev) {
     const newTeamId = ev.target.value
-    this.setState({ newTeamId })
+    const newTeam = this.state.teams.find(team => team.id === newTeamId*1)
+    this.setState({ newTeam })
   }
 
   setPlayerInfo(players, teams, id) {
     const player = players.find( player => player.id === id)
-    const teammates = players.filter( _player =>  _player.team.id === player.team.id && _player.id !== player.id)
-    player && this.setState({ player, players, teams, teammates })
+    const team = player && teams.find( team => player.teamId === team.id)
+    console.log('player', player)
+    console.log('team', team)
+    const teammates = player && players.filter( _player =>  _player.team.id === player.team.id && _player.id !== player.id)
+    player && team && this.setState({ player, players, teams, teammates, team, newTeam: player.team })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -46,7 +48,7 @@ export default class Player extends React.Component {
   }
 
   render() {
-    const { player, team, teammates, teams, newTeamId } = this.state
+    const { player, team, teammates, teams, newTeam } = this.state
     const { onTeamChange, submitButton } = this
     return (
       <div>
@@ -70,19 +72,22 @@ export default class Player extends React.Component {
         <br />
 
         <form onSubmit={ submitButton }>
-          <label>Change Team</label>
-          {
-            teams &&
-            <select onChange={ onTeamChange } value={ newTeamId }>
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <label className="font-weight-bold">Change Team</label>
               {
-                teams.map(team => (
-                  <option value={team.id} key={team.id}>{team.name}</option>
-                ))
+                teams &&
+                <select className="form-control" onChange={ onTeamChange } value={ newTeam.id }>
+                  {
+                    teams.map(team => (
+                      <option value={team.id} key={team.id}>{team.name}</option>
+                    ))
+                  }
+                </select>
               }
-            </select>
-          }
-
-          <button>Update</button>
+            </div>
+          </div>
+          <button className="btn btn-outline-success">Update</button>
         </form>
 
         <br />
