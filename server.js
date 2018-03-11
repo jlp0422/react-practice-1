@@ -53,6 +53,10 @@ app.post('/api/teams', (req, res, next) => {
     .catch(next)
 })
 
+app.put('/api/players/:id', (req, res, next) => {
+  console.log(req.body)
+})
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`port of call: ${port}`))
 

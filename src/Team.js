@@ -13,16 +13,18 @@ export default class Team extends React.Component {
     }
   }
 
+  setTeamInfo(players, teams, id) {
+    const team = teams.find( team => team.id === id)
+    const _players = players.filter( player => player.team.id === id)
+    team && this.setState({ team, players })
+  }
+
   componentWillReceiveProps(nextProps) {
-    const team = nextProps.teams.find( team => team.id === nextProps.id*1)
-    const players = nextProps.players.filter( player => player.team.id === nextProps.id*1)
-    players && team ? this.setState({ team, players }) : null
+    this.setTeamInfo(nextProps.players, nextProps.teams, nextProps.id*1)
   }
 
   componentDidMount() {
-    const players = this.props.players.filter( player => player.team.id === this.props.id*1)
-    const { team } = this.props
-    players && team ? this.setState({ players, team }) : null
+    this.setTeamInfo(this.props.players, this.props.teams, this.props.id*1)
   }
 
   render() {

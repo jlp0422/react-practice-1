@@ -11,34 +11,43 @@ export default class Player extends React.Component {
       player: {},
       team: {},
       teammates: [],
-      teams: []
+      teams: [],
+      newTeamId: ''
     }
     this.submitButton = this.submitButton.bind(this)
+    this.onTeamChange = this.onTeamChange.bind(this)
   }
 
   submitButton(ev) {
     ev.preventDefault()
-    const { name, teamId } = this.state
-    this.props.onCreatePlayer({ name, teamId })
+    const { player, newTeamId } = this.state
+    const playerId = player.id*1
+    const teamId = newTeamId*1
+    this.props.onChangeTeam({ playerId, teamId })
+  }
+
+  onTeamChange(ev) {
+    const newTeamId = ev.target.value
+    this.setState({ newTeamId })
+  }
+
+  setPlayerInfo(players, teams, id) {
+    const player = players.find( player => player.id === id)
+    const teammates = players.filter( _player =>  _player.team.id === player.team.id && _player.id !== player.id)
+    player && this.setState({ player, players, teams, teammates })
   }
 
   componentWillReceiveProps(nextProps) {
-    const playerId = nextProps.id
-    const { teams } = nextProps
-    const player = nextProps.players.find( player => player.id === playerId*1)
-    const team = player ? player.team : null
-    const teammates = player ? nextProps.players.filter( _player => _player.team.id === player.team.id && _player.id !== player.id) : null
-    player && team && teammates ? this.setState({ player, team, teammates, teams }) : null
+    this.setPlayerInfo(nextProps.players, nextProps.teams, nextProps.id*1)
   }
 
   componentDidMount() {
-    const { player, team, players, teams } = this.props
-    const teammates = players.filter(_player => _player.team.id === player.team.id && _player.id !== player.id)
-    this.setState({ player, team, teammates, teams })
+    this.setPlayerInfo(this.props.players, this.props.teams, this.props.id*1)
   }
 
   render() {
-    const { player, team, teammates, teams } = this.state
+    const { player, team, teammates, teams, newTeamId } = this.state
+    const { onTeamChange, submitButton } = this
     return (
       <div>
         <Helmet>
@@ -55,16 +64,16 @@ export default class Player extends React.Component {
               ))
             ) : (
                 <li>No teammates</li>
-              )
+            )
           }
         </ul>
         <br />
 
-      {/*  <form>
+        <form onSubmit={ submitButton }>
           <label>Change Team</label>
           {
             teams &&
-            <select value={team.id}>
+            <select onChange={ onTeamChange } value={ newTeamId }>
               {
                 teams.map(team => (
                   <option value={team.id} key={team.id}>{team.name}</option>
@@ -75,7 +84,7 @@ export default class Player extends React.Component {
 
           <button>Update</button>
         </form>
-      */ }
+
         <br />
         <p><Link to='/players'>&laquo; Back to all players</Link></p>
       </div>

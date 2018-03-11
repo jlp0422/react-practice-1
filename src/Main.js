@@ -26,6 +26,7 @@ export default class Main extends React.Component {
     this.selectPlayerAndTeam = this.selectPlayerAndTeam.bind(this)
     this.onCreateTeam = this.onCreateTeam.bind(this)
     this.onCreatePlayer = this.onCreatePlayer.bind(this)
+    this.onChangeTeam = this.onChangeTeam.bind(this)
   };
 
   componentDidMount() {
@@ -80,9 +81,16 @@ export default class Main extends React.Component {
       .then(() => document.location.hash = '/players')
   }
 
+  onChangeTeam(player) {
+    // console.log(typeof player.playerId)
+    axios.put(`/api/players/${player.playerId}`, player.newTeamId)
+      .then( res => res.data)
+      .then( player => console.log(player))
+  }
+
   render() {
     const { players, teams, selectedTeam, selectedTeamPlayers, selectedPlayer } = this.state
-    const { selectTeamAndPlayers, selectPlayerAndTeam, onCreateTeam, onCreatePlayer } = this
+    const { selectTeamAndPlayers, selectPlayerAndTeam, onCreateTeam, onCreatePlayer, onChangeTeam } = this
     return (
       <Router>
         <div>
@@ -91,7 +99,7 @@ export default class Main extends React.Component {
 
             <Route path='/' exact component={ Home } />
 
-            <Route path='/player/create' exact render={() => (
+            <Route path='/players/create' exact render={() => (
               <CreatePlayer
                 teams={teams}
                 players={players}
@@ -104,7 +112,8 @@ export default class Main extends React.Component {
                 player={ selectedPlayer }
                 team={ selectedTeam }
                 players={ players }
-                teams={ teams }/>
+                teams={ teams }
+                onChangeTeam={ onChangeTeam }/>
             )} />
 
             <Route path='/players' exact render={() => (
@@ -113,7 +122,7 @@ export default class Main extends React.Component {
                 selectPlayerAndTeam={ selectPlayerAndTeam }/>
             )} />
 
-            <Route path='/team/create' exact render={() => (
+            <Route path='/teams/create' exact render={() => (
               <CreateTeam
                 teams={ teams }
                 onCreateTeam={ onCreateTeam } />

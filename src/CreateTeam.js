@@ -14,7 +14,7 @@ export default class CreateTeam extends React.Component {
 
   onNameChange(ev) {
     const name = ev.target.value
-    const teams = this.props.teams
+    // const teams = this.props.teams
     // teams.forEach(team => (
     //   team.name === name ? (
     //     console.log('match')

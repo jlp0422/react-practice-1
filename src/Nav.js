@@ -18,7 +18,7 @@ const Nav = ({ location }) => {
 
       <li className="nav-item">
         {
-         path.match(/players/) ? (
+         path === '/players' ? (
            <span className="nav-link active font-weight-bold">Players</span>
          ) : (
            <Link className="nav-link font-weight-bold" to='/players'>Players</Link>
@@ -28,7 +28,7 @@ const Nav = ({ location }) => {
 
       <li className="nav-item">
         {
-         path.match(/teams/) ? (
+         path === '/teams' ? (
            <span className="nav-link active font-weight-bold">Teams</span>
          ) : (
            <Link className="nav-link font-weight-bold" to='/teams'>Teams</Link>
@@ -38,20 +38,20 @@ const Nav = ({ location }) => {
 
       <li className="nav-item">
         {
-          path === '/team/create' ? (
+          path === '/teams/create' ? (
             <span className="nav-link active font-weight-bold">Create Team</span>
           ) : (
-            <Link className="nav-link font-weight-bold" to='/team/create'>Create Team</Link>
+            <Link className="nav-link font-weight-bold" to='/teams/create'>Create Team</Link>
           )
         }
       </li>
 
       <li className="nav-item">
         {
-          path === '/player/create' ? (
+          path === '/players/create' ? (
             <span className="nav-link active font-weight-bold">Create Player</span>
           ) : (
-              <Link className="nav-link font-weight-bold" to='/player/create'>Create Player</Link>
+              <Link className="nav-link font-weight-bold" to='/players/create'>Create Player</Link>
             )
         }
       </li>
