@@ -15,9 +15,11 @@ export default class Team extends React.Component {
   }
 
   setTeamInfo(players, teams, id) {
+    console.log(teams)
     const team = teams.find( team => team.id === id)
+    console.log(team)
     const _players = players.filter( player => player.team.id === id)
-    team && this.setState({ team, players })
+    team && this.setState({ team, players: _players })
   }
 
   componentWillReceiveProps(nextProps) {

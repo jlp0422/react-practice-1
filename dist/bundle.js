@@ -26861,13 +26861,15 @@ var Team = function (_React$Component) {
   _createClass(Team, [{
     key: 'setTeamInfo',
     value: function setTeamInfo(players, teams, id) {
+      console.log(teams);
       var team = teams.find(function (team) {
         return team.id === id;
       });
+      console.log(team);
       var _players = players.filter(function (player) {
         return player.team.id === id;
       });
-      team && this.setState({ team: team, players: players });
+      team && this.setState({ team: team, players: _players });
     }
   }, {
     key: 'componentWillReceiveProps',
