@@ -14,12 +14,10 @@ export default class Team extends React.Component {
     this.setTeamInfo = this.setTeamInfo.bind(this)
   }
 
-  setTeamInfo(players, teams, id) {
-    console.log(teams)
+  setTeamInfo(allPlayers, teams, id) {
     const team = teams.find( team => team.id === id)
-    console.log(team)
-    const _players = players.filter( player => player.team.id === id)
-    team && this.setState({ team, players: _players })
+    const players = allPlayers.filter( player => player.team.id === id)
+    team && this.setState({ team, players })
   }
 
   componentWillReceiveProps(nextProps) {

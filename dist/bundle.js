@@ -26860,16 +26860,14 @@ var Team = function (_React$Component) {
 
   _createClass(Team, [{
     key: 'setTeamInfo',
-    value: function setTeamInfo(players, teams, id) {
-      console.log(teams);
+    value: function setTeamInfo(allPlayers, teams, id) {
       var team = teams.find(function (team) {
         return team.id === id;
       });
-      console.log(team);
-      var _players = players.filter(function (player) {
+      var players = allPlayers.filter(function (player) {
         return player.team.id === id;
       });
-      team && this.setState({ team: team, players: _players });
+      team && this.setState({ team: team, players: players });
     }
   }, {
     key: 'componentWillReceiveProps',
